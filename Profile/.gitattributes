@@ -4,3 +4,4 @@ Profile/linux/* linguist-generated
 Profile/windows/* linguist-generated
 Profile/web/* linguist-generated
 Profile/macos/* linguist-generated
+*.cpp linguist-vendored
