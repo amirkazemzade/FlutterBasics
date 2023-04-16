@@ -1,7 +1,7 @@
-Profile/android/* linguist-vendored
-Profile/ios/* linguist-vendored
-Profile/linux/* linguist-vendored
-# Profile/windows/* linguist-vendored
-Profile/web/* linguist-vendored
-Profile/macos/* linguist-vendored
-*.cpp linguist-vendored
+# Profile/android/* linguist-vendored
+# Profile/ios/* linguist-vendored
+# Profile/linux/* linguist-vendored
+# # Profile/windows/* linguist-vendored
+# Profile/web/* linguist-vendored
+# Profile/macos/* linguist-vendored
+# *.cpp linguist-vendored
