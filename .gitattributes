@@ -4,4 +4,3 @@ Profile/linux/** linguist-vendored
 Profile/windows/** linguist-vendored
 Profile/web/** linguist-vendored
 Profile/macos/** linguist-vendored
-*.cpp linguist-vendored
