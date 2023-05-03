@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nike_shoe_store/constants.dart';
-
-import '../login/login_page.dart';
+import 'package:nike_shoe_store/logic/bloc/sign_up/sign_up_bloc.dart';
+import 'package:nike_shoe_store/screen/app_routes.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -11,12 +12,42 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  var state = false;
+  var showPassword = false;
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _content(context),
+    return BlocProvider(
+      create: (context) => SignUpBloc(),
+      child: BlocListener<SignUpBloc, SignUpState>(
+        listener: (context, state) {
+          if (state is SignUpSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Signed Up")),
+            );
+            Navigator.of(context).pushNamed(AppRoutes.home);
+          }
+          if (state is SignUpFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage)),
+            );
+          }
+        },
+        child: Scaffold(
+          body: BlocBuilder<SignUpBloc, SignUpState>(
+            builder: (context, state) {
+              if (state is SignUpLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return _content(context);
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -73,23 +104,26 @@ class _SignUpState extends State<SignUp> {
 
   InkWell _goToLoginPage(BuildContext context) {
     return InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()));
-            },
-            child: const Text(
-              login,
-              style: TextStyle(fontSize: 18, color: blueColor),
-              textAlign: TextAlign.center,
-            ),
-          );
+      onTap: () {
+        Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
+      },
+      child: const Text(
+        login,
+        style: TextStyle(fontSize: 18, color: blueColor),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 
   FilledButton _signUpButton(BuildContext context) {
     return FilledButton(
       onPressed: () {
-        // TODO: sign up
+        context.read<SignUpBloc>().add(
+              OnSignUp(
+                email: emailController.text,
+                password: passwordController.text,
+              ),
+            );
       },
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(blueColor),
@@ -110,9 +144,10 @@ class _SignUpState extends State<SignUp> {
 
   TextField _passwordTextField() {
     return TextField(
+      controller: passwordController,
       keyboardType: TextInputType.visiblePassword,
       textAlign: TextAlign.right,
-      obscureText: state,
+      obscureText: !showPassword,
       decoration: InputDecoration(
         focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -126,10 +161,10 @@ class _SignUpState extends State<SignUp> {
         prefixIcon: InkWell(
           onTap: () {
             setState(() {
-              state = !state;
+              showPassword = !showPassword;
             });
           },
-          child: (!state)
+          child: (!showPassword)
               ? const Icon(Icons.visibility)
               : const Icon(Icons.visibility_off),
         ),
@@ -139,9 +174,10 @@ class _SignUpState extends State<SignUp> {
   }
 
   TextField _emailTextField() {
-    return const TextField(
+    return TextField(
+      controller: emailController,
       textAlign: TextAlign.right,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(18)),
             borderSide: BorderSide(color: darkBlueColor, width: 1)),

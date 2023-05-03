@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nike_shoe_store/logic/bloc/login/login_bloc.dart';
-import 'package:nike_shoe_store/screen/profile/profile_page.dart';
-import 'package:nike_shoe_store/screen/sign_up/sign_up_page.dart';
+import 'package:nike_shoe_store/screen/app_routes.dart';
 
 import '../../constants.dart';
 
@@ -29,8 +28,15 @@ class _LoginPageState extends State<LoginPage> {
             if (state is LoginSuccess) {
               ScaffoldMessenger.of(context)
                   .showSnackBar(const SnackBar(content: Text("Logged In")));
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()));
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                AppRoutes.home,
+                (route) => false,
+              );
+            }
+            if (state is LoginFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.errorMessage)),
+              );
             }
           },
           child: BlocBuilder<LoginBloc, LoginState>(
@@ -84,9 +90,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
             InkWell(
               onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const SignUp()));
+                Navigator.pushNamedAndRemoveUntil(
+                    context, AppRoutes.signUp, (route) => false);
               },
               child: const Text(
                 signup,
@@ -175,16 +180,6 @@ class _LoginPageState extends State<LoginPage> {
             OnLogin(
                 email: emailController.text, password: passwordController.text),
           );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.ac_unit),
-              Text("hi ${emailController.text} ${passwordController.text}"),
-            ],
-          ),
-        ),
-      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
