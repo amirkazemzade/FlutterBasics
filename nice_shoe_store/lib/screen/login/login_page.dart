@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nike_shoe_store/logic/bloc/login/login_bloc.dart';
-import 'package:nike_shoe_store/screen/profile/profile_page.dart';
-import 'package:nike_shoe_store/screen/sign_up/sign_up_page.dart';
+import 'package:nike_shoe_store/navigation/app_routes.dart';
 
 import '../../constants.dart';
 
@@ -29,8 +28,7 @@ class _LoginPageState extends State<LoginPage> {
             if (state is LoginSuccess) {
               ScaffoldMessenger.of(context)
                   .showSnackBar(const SnackBar(content: Text("Logged In")));
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()));
+              Navigator.popAndPushNamed(context, AppRoutes.profile);
             }
           },
           child: BlocBuilder<LoginBloc, LoginState>(
@@ -83,11 +81,8 @@ class _LoginPageState extends State<LoginPage> {
               textAlign: TextAlign.center,
             ),
             InkWell(
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const SignUp()));
-              },
+              onTap: () =>
+                  Navigator.pushReplacementNamed(context, AppRoutes.signUp),
               child: const Text(
                 signup,
                 style: TextStyle(fontSize: 18, color: blueColor),

@@ -7,6 +7,8 @@ const darkBlueColor = Color(0xFF48A2F5);
 const lightBlueColor = Color(0xFFCCDBEE);
 const blueColor = Color(0xFF82C1FB);
 
+const defaultError = 'Something went wrong!';
+
 const login = "ورود";
 const email = "ایمیل";
 const pleaseEnterEmailAndPassword = "لطفا ایمیل و رمزعبور خود را وارد کنید";
