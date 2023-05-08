@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nike_shoe_store/data/model/Login_response.dart';
+import 'package:nike_shoe_store/data/model/login_request.dart';
+import 'package:nike_shoe_store/data/provider/user_provider.dart';
 
 part 'login_event.dart';
 
@@ -11,10 +14,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<OnLogin>(_onLogin);
   }
 
+  final provider = UserProvider();
+
   FutureOr<void> _onLogin(OnLogin event, Emitter<LoginState> emit) async {
     emit(LoginLoading());
-    // TODO: use api to check login information
-    await Future.delayed(const Duration(seconds: 3));
-    emit(LoginSuccess());
+    try {
+      final response = await provider.login(
+        LoginRequest(username: event.email, password: event.password),
+      );
+      emit(LoginSuccess(response));
+    } catch (e) {
+      emit(LoginFailure(e.toString()));
+    }
   }
 }

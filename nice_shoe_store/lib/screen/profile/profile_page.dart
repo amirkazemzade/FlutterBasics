@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nike_shoe_store/constants.dart';
 
-import '../../constants.dart';
 import 'components/action_tile.dart';
 
 class ProfilePage extends StatelessWidget {
